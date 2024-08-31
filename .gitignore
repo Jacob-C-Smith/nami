@@ -51,5 +51,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 Interpreter-main
-build
+build/*
 lib
+!build/resources
