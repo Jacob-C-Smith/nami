@@ -1,4 +1,4 @@
-name: g10
+name: nami
 
 on:
   push:
@@ -23,13 +23,14 @@ jobs:
     - name: Install Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install valgrind libsdl2-dev libsdl2-image-dev libsdl2-net-dev cmake ninja-build
+        sudo apt-get install valgrind cmake ninja-build
         
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: |
         git submodule update --init
+        git submodule update --remote
         cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
     - name: Build
@@ -41,5 +42,11 @@ jobs:
       # Execute tests defined by the CMake configuration.
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: |
+        ${{github.workspace}}/build/array_test
+        ${{github.workspace}}/build/dict_test
+        ${{github.workspace}}/build/json_test
+        ${{github.workspace}}/build/queue_test
+        ${{github.workspace}}/build/stack_test
+        ${{github.workspace}}/build/tuple_test
         ${{github.workspace}}/build/nami_test
         
