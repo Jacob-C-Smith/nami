@@ -1,0 +1,33 @@
+[submodule "extern/log"]
+	path = extern/log
+	url = https://github.com/Jacob-C-Smith/log
+[submodule "extern/sync"]
+	path = extern/sync
+	url = https://github.com/Jacob-C-Smith/sync
+[submodule "extern/hash-cache"]
+	path = extern/hash-cache
+	url = https://github.com/Jacob-C-Smith/hash-cache
+[submodule "extern/dict"]
+	path = extern/dict
+	url = https://github.com/Jacob-C-Smith/dict
+[submodule "extern/array"]
+	path = extern/array
+	url = https://github.com/Jacob-C-Smith/array
+[submodule "extern/stack"]
+	path = extern/stack
+	url = https://github.com/Jacob-C-Smith/stack
+[submodule "extern/queue"]
+	path = extern/queue
+	url = https://github.com/Jacob-C-Smith/queue
+[submodule "extern/tuple"]
+	path = extern/tuple
+	url = https://github.com/Jacob-C-Smith/tuple
+[submodule "extern/json"]
+	path = extern/json
+	url = https://github.com/Jacob-C-Smith/json
+[submodule "extern/tree"]
+	path = extern/tree
+	url = https://github.com/Jacob-C-Smith/tree
+[submodule "extern/parallel"]
+	path = extern/parallel
+	url = https://github.com/Jacob-C-Smith/parallel
