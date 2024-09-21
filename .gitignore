@@ -54,3 +54,4 @@ Interpreter-main
 build/*
 lib
 !build/resources
+.vscode/settings.json
