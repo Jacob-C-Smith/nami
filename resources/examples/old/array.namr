@@ -1,0 +1,57 @@
+/** !
+ * Array module
+ *
+ * @file resources/array.nami 
+ *
+ * @author Jacob Smith
+ */ 
+
+// Array interface
+Array.length ( a : array, p_length : int * )
+Array.index ( a : array, index : int, p_result : * )
+
+// Constructor
+int array.construct ( array *p_a )
+{
+
+    // Argument check
+    if ( p_a == null ) goto no_p_a;
+
+    // Initialized data
+    array a = null
+
+    if ( allocate(array) == 0 ) goto failed_to_allocate_array;
+
+    // Return a value to the caller
+    *p_a = a
+
+    // Error handling
+    {
+        no_p_a:
+            error("[array] ERROR! BLAH BLAH BLAH" );
+        failed_to_allocate_array:
+            error("[array] ERROR! BLAH BLAH BLAH" );
+    }
+}
+
+// Info
+int array.info ( array a )
+{
+
+    // Formatting
+    print("Array: \n")
+
+    // Print the array's length
+    print("\tlength: %d\n", a.length)
+}
+
+// Serialize
+int array.serialize ( FILE *p_file, array a )
+{
+
+    // Initialized data
+    dog_text : str = format("{\"name\":%s,"\color\":%s"}", d.name, d.color)
+
+    // Serialize the dog to the FILE
+    write(file=p_file, data=dog_text)
+}

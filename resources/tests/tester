@@ -1,0 +1,75 @@
+////// PARSE //////
+x
+x+3
+x * *
+10 / 2
+(x + 3) * (y - 2)
+x + 3 * y - 2 / 4
+x + 
+x 3
+(x + 3
+
+////// SCAN //////
+4
+4.4
+x
+;
+.4
+-10
+.
+12.34.56
+
+var x = 5;
+2
++-*/()=
+
+!! Comment
+!! Multi\nLine !!
+!! Multi\nLine !! words after
+11 !! Multi\nLine !! 11. 122 .1 .
+
+////// EVALUATE //////
+x = 1; wr x
+wr x
+wr 10 - 4 - 3
+wr 6 / (10 - 8)
+wr 6 + 4 / (10 - 8)
+wr 10 - 4 - 3 - 3 + 10
+x = 10
+y = x - 5
+z = y * 2
+wr z / 2 + 3
+wr y
+wr 5 + 2 * 3 - 4 / 2
+wr (5 + 2) * (3 - 1)
+wr 10 / 2 / 3
+
+36
+12
+
+
+rd a;
+rd b;
+while a<>b do
+    if a > b then 
+        a = a - b;
+    else
+        b = b - a;
+wr a
+
+rd n;
+if n <= 2 then
+    wr 1
+else
+    begin a = 1;
+        b = 1;
+        i = 3;
+        while i <= n do
+        begin
+            temp = a;
+            a = a + b;
+            b = temp;
+            i = i + 1;
+        end
+        wr a;
+    end

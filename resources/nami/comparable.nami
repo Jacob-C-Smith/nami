@@ -1,0 +1,12 @@
+interface Comparable
+{
+
+    /** !
+     * Compare thing a to thing b
+     *
+     * @param a        thing a
+     * @param b        thing a
+     * @param p_result -1 if A>B else 1 if B>A else 0
+     */
+    compare ( a, b, p_result : int * )
+}

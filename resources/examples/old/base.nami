@@ -1,0 +1,17 @@
+interface Base
+{
+    wait ( ) 
+    {
+
+    }
+
+    notify ( )
+    {
+        
+    }
+
+    notify_all ( )
+    {
+        
+    }
+}

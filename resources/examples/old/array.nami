@@ -1,0 +1,57 @@
+/** !
+ * Array module
+ *
+ * @file resources/array.nami 
+ *
+ * @author Jacob Smith
+ */ 
+
+// Array interface
+interface Array : Base
+{
+
+}
+
+// Array type
+type array : Array
+{
+
+    // Data
+    //
+
+    // Constructor
+    construct ( p_a : array * )
+    {
+
+        // Initialized data
+        a : array = []
+
+        // Return a value to the caller
+        *p_a = a
+    }
+
+    // Info
+    info ( a : array )
+    {
+
+        // Formatting
+        print("Array: \n")
+
+        // Print the array's length
+        print("\tlength: %d\n", a.length)
+    }
+
+    // Serialize
+    serialize ( p_file : FILE, a : array )
+    {
+
+        // Initialized data
+        dog_text : str = format("{\"name\":%s,"\color\":%s"}", d.name, d.color)
+
+        // Serialize the dog to the FILE
+        write(file=p_file, data=dog_text)
+    }
+
+    wait ( )
+    
+}

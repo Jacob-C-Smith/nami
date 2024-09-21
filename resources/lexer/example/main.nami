@@ -1,0 +1,7 @@
+// Entry point
+main ( argc : int, argv : array )
+{
+
+    // Print a message to standard out
+    print("Hello, World!")
+}

@@ -1,0 +1,18 @@
+{"comment"        : "// Entry point"}
+{"identifier"     : "main"}
+{"separator"      : "("}
+{"identifier"     : "argc"}
+{"separator"      : ":"}
+{"keyword"        : "int"}
+{"separator"      : ","}
+{"identifier"     : "argv"}
+{"separator"      : ":"}
+{"keyword"        : "array"}
+{"separator"      : ")"}
+{"separator"      : "{"}
+{"comment"        : "// Print a message to standard out"}
+{"identifier"     : "print"},
+{"separator"      : "("}
+{"string literal" : "Hello, World!"}
+{"separator"      : ")"}
+{"separator"      : "}"}

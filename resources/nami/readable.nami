@@ -1,0 +1,19 @@
+/** !
+ * Nami readable
+ *
+ * @file nami/readable.nami
+ *
+ * @author Jacob Smith
+ */
+
+interface Readable 
+{
+
+    // Inherited functions
+    //  - wait ( )
+    //  - notify ( )
+    //  - notify_all ( )
+
+    read ( )
+}
+

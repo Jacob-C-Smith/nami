@@ -1,0 +1,206 @@
+/** !
+ * Nami example program
+ *
+ * @file resources/program.nami 
+ *
+ * @author Jacob Smith
+ */ 
+
+// Data
+
+// Entry point
+main ( argc : int, argv : array )
+{
+
+    // Initialized data
+    i  : int    = 0
+    d  : float  = 0.0
+    s  : str    = "Hello, World!"
+    t  : tuple  = ("Red", "Green", "Blue")
+    a  : array  = [ 1, 2, 3 ]
+    o  : object = { "a" : 1, "b" : 2 }
+    f  : FILE   = open("nami.out", "w")
+
+    // Print hello world to standard out
+    print("Hello, World!\n");
+
+    // Print an error to standard error 
+    print("[error] Error\n", p_file=stderr)
+
+    // Dog example
+    dog_example(argc, argv)
+    
+    // Async example
+    async_example(argc, argv)
+
+    // Done
+}
+
+custom_listener ( s : socket, ip_address : int, port : int )
+{
+
+    // Initialized data
+    a : array = [
+        ( ip_address & 0xff000000 ) >> 24,
+        ( ip_address & 0x00ff0000 ) >> 16,
+        ( ip_address & 0x0000ff00 ) >> 8,
+        ( ip_address & 0x000000ff )
+    ]
+    ip : str = format("%d.%d.%d.%d", a[0], a[1], a[2], a[3])
+
+    // Print the IP address
+    print("%s:%d\n", ip, port)
+}
+
+my_dog_constructor ( name : str, color : str, p_dog : dog * )
+{
+    
+}
+
+dog_example ( argc : int, argv : array )
+{
+    
+    // Initialized data
+    d : dog 
+    e : dog
+    f : FILE 
+    
+    dog.construct("nami", "cream", &d)
+    
+    dog.construct = my_dog_constructor
+
+    dog.construct("eddy", "gray", &e)
+
+    open("dog.out", "w", &f)
+
+    dog.constructor = my_dog_constructor
+
+    // Print info about the dog
+    d.info()
+
+    // Serialize the dog to standard out
+    d.serialize(stdout)
+
+    // Overwrite the default serializer
+    d.serialize = cat_serializer
+
+    // Open another file
+    f = open("cat.out", "w")
+
+    // Serialize the dog to standard out using the cat's serializer
+    d.serialize(stdout) // d.serialize(file=stdout, serializer=d.serializer)
+
+    d.serialize(stdout, serializer=cat_serializer)
+    
+    // Done
+}
+
+async_example ( argc : int, argv : array )
+{
+
+    // Initialized data
+    f : FILE = open("large_file.txt")
+    s : str = async f.read(len=65536)
+
+    // Tell the user that the file is loading
+    print("Loading file...\n")
+
+    // Resolve
+    await s
+
+    // Tell the user the file is loaded
+    print("File loaded:\n")
+    print(s)
+
+    // Done
+}
+
+function_example ( argc : int, argv : array )
+{
+
+    // Initialized data
+    f : func = sum
+
+
+    // Done
+}
+
+// Sum
+sum ( a : array, l : int, p_s : int* )
+{
+
+    // Initialized data
+    s : int = 0
+
+    // Summate
+    for ( i : int = 0; i < l; i++ )
+    {
+
+        // Accumulate
+        s += a[i]
+    }
+
+    // Return a value to the caller
+    *p_s = s
+
+    // Done
+}
+
+// Serialize
+cat_serializer ( p_file : FILE, d : dog )
+{
+
+    // Initialized data
+    dog_text : str = format("{\"name\":%s,"\color\":%s",\"cat\":true}", d.name, d.color)
+
+    // Serialize the dog to the FILE
+    write(file=p_file, data=dog_text)
+}
+
+// Dog type
+type dog
+{
+
+    // Data
+    struct 
+    {
+        name  : str
+        color : str
+    }
+
+    // Constructor
+    construct ( name : str, color : str, p_d : dog* )
+    {
+
+        // Initialized data
+        d : object = { "name" : name, "color" : color }
+
+        // Return a value to the caller
+        *p_d = d
+    }
+
+    // Info
+    info ( d : dog )
+    {
+
+        // Formatting
+        print("Dog: \n")
+
+        // Print the dog's name
+        print("\tname : %s\n", d.name)
+
+        // Print the dog's color
+        print("\color : %s\n", d.color)
+    }
+
+    // Serialize
+    serialize ( p_file : FILE, d : dog )
+    {
+
+        // Initialized data
+        dog_text : str = str.format("{\"name\":%s,"\color\":%s"}", d.name, d.color)
+
+        // Serialize the dog to the FILE
+        write(file=p_file, data=dog_text)
+    }
+}

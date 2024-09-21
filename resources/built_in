@@ -1,16 +1,102 @@
-log
-tuple
-array
-dict
-json
-stack
-queue
-base64
-socket
-thread
-monitor
-mutex
-semaphore
-binary_tree
-circular_buffer
+print:
+    printf
+    fprintf
+
+string:
+    construct
+    format
+    length
+    copy
+    access_index
+    substring
+    fori
+    foreach
+    is_empty
+
+tuple:
+    construct
+    access_index
+    fori
+    foreach
+
+array:
+    construct
+    access_index
+    mutate_index
+    fori
+    foreach
+    is_empty
+
+dict:
+    construct
+    access_field
+    mutate_field
+    foreach
+    is_empty
+
+json:
+    serialize
+    deserialize
+
+stack:
+    construct
+    push
+    pop
+    peek
+    foreach
+    fori
+    length
+    is_empty
+
+queue:
+    construct
+    enqueue
+    dequeue
+    foreach
+    fori
+    length
+    is_empty
+
+pack:
+    pack
+    unpack
+
+base64:
+    serialize
+    deserialize
+
+socket:
+thread:
+
+monitor:
+    construct
+    wait
+    notify
+    notify_all
+
+mutex:
+    construct
+    lock
+    unlock
+
+semaphore:
+    construct
+    wait
+    post
+
+binary_tree:
+    construct
+    insert
+    remove
+    serialize
+    parse
+    traverse
+
+circular_buffer:
+    construct
+    enqueue
+    dequeue
+    is_empty
+    len
+    
 set

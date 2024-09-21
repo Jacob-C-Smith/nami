@@ -1,0 +1,115 @@
+program:
+    
+
+declaration:
+    identifier ':' type_specifier
+
+initializer:
+    declarator '=' value
+
+declarator:
+    identifier
+
+type_specifier: 
+    'object' |
+    'array' |
+    'string' |
+    'number' |
+    'bool' |
+    type_name
+
+type_name:
+    identifier
+
+value:
+    object |
+    array | 
+    string |
+    number |
+    'true' |
+    'false' |
+    'null'
+
+object:
+    '{' whitespace '}' | 
+    '{' fields '}' 
+
+fields:
+    field |
+    field ',' field
+
+field:
+    whitespace string whitespace ':' element
+
+array:
+    '[' whitespace ']' |
+    '[' elements ']'
+
+elements:
+    element |
+    element ',' element
+
+element:
+    whitespace value whitespace
+
+string:
+    '\'' characters '\''
+
+characters:
+    character characters
+
+character:
+    '0020' . '10FFFF' - '\'' - '\\' |
+    '\\' escape
+
+escape:
+    '\''  |
+    '\\' |
+    '/'  |
+    'b'  |
+    'f'  |
+    'n'  |
+    'r'  |
+    't' 
+
+hex:
+    digit |
+    'A' . 'F' |
+    'a' . 'f' 
+
+number:
+    integer fraction exponent
+
+integer:
+    digit |
+    onenine digits |
+    '-' digit |
+    '-' onenine digits
+
+digits:
+    digit |
+    digit digits
+
+digit:
+    '0' |
+    onenine
+
+onenine:
+    '1' . '9'
+
+fraction:
+    '.' digits
+
+exponent:
+    'E' sign digits |
+    'e' sign digits
+
+sign:
+    '+' |
+    '-' 
+
+whitespace:
+    ' '  |
+    '\r' |
+    '\n' |
+    '\t' 

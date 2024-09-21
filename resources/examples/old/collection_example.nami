@@ -1,0 +1,31 @@
+/** !
+ * Nami collection example 
+ *
+ * @file resources/examples/collection_example.nami 
+ *
+ * @author Jacob Smith
+ */ 
+
+// Data
+//
+
+// Entry point
+main ( argc : int, argv : array )
+{
+
+    // Data
+    c : collection 
+    
+    // Initialize
+    collection(&c, argc)
+
+    // Add each command line argument to the collection
+    for ( i : int = 0; i < argc; i++ )
+    {
+        c.add(argv[i])
+    }
+
+    
+
+    // Done
+}

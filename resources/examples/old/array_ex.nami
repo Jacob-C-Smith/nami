@@ -1,0 +1,17 @@
+next ( a : Array, p_element : * )
+{
+
+}
+
+main ( argc : int, argv : array )
+{
+
+    a  : array = [] 
+    it : iterator 
+
+    it = a.iterator()
+
+    it.next = next
+
+    it.iterate()
+}

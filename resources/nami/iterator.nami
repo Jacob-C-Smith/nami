@@ -1,0 +1,19 @@
+/** !
+ * Nami iterator
+ *
+ * @file nami/iterator.nami
+ *
+ * @author Jacob Smith
+ */
+
+interface Iterator 
+{
+
+    // Inherited functions
+    //  - wait ( )
+    //  - notify ( )
+    //  - notify_all ( )
+
+    
+}
+
