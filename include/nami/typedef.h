@@ -30,6 +30,7 @@ enum nami_node_type_e
 
 // Forward declarations
 struct nami_environment_s;
+struct nami_lexer_s;
 struct nami_node_s;
 struct nami_statement_s;
 struct nami_assignment_s;
@@ -43,6 +44,7 @@ struct nami_mul_s;
 
 // Type definitions
 typedef struct nami_environment_s nami_environment;
+typedef struct nami_lexer_s       nami_lexer; 
 typedef struct nami_node_s        nami_node;
 typedef struct nami_statement_s   nami_statement;
 typedef struct nami_assignment_s  nami_assignment;
@@ -54,6 +56,6 @@ typedef struct nami_number_s      nami_number;
 typedef struct nami_add_s         nami_add;
 typedef struct nami_mul_s         nami_mul;
 
-typedef int (*fn_nami_parse)         ( nami_node *p_node, char             *p_text, char **pp_return_pointer );
-typedef int (fn_nami_evaluate)       ( nami_node *p_node, nami_environment *p_environment );
-typedef int (*fn_nami_code_generate) ( nami_node *p_node, FILE             *p_f );
+typedef int (fn_nami_parse)         ( nami_node *p_node, char             *p_text, char **pp_return_pointer );
+typedef int (fn_nami_evaluate)      ( nami_node *p_node, nami_environment *p_environment );
+typedef int (fn_nami_code_generate) ( nami_node *p_node, FILE             *p_f );
