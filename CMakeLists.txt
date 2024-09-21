@@ -115,11 +115,23 @@ if (${IS_DEBUG_BUILD})
     add_compile_definitions(NDEBUG)
 endif ()
 
-# Add source to this project's executable.
+# Add source to this project's example.
 add_executable (nami_example "main.c")
 add_dependencies(nami_example nami log json array dict sync)
 target_include_directories(nami_example PUBLIC ${NAMI_INCLUDE_DIR} ${QUEUE_INCLUDE_DIR} ${ARRAY_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR} ${HASH_CACHE_INCLUDE_DIR})
 target_link_libraries(nami_example nami queue log json array dict sync)
+
+# Add source to the lexer.
+add_executable (nami_lexer "lexer_main.c")
+add_dependencies(nami_lexer nami log json array dict sync)
+target_include_directories(nami_lexer PUBLIC ${NAMI_INCLUDE_DIR} ${QUEUE_INCLUDE_DIR} ${ARRAY_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR} ${HASH_CACHE_INCLUDE_DIR})
+target_link_libraries(nami_lexer nami queue log json array dict sync)
+
+# Add source to the lexer.
+add_executable (nami_lexer_pretty_printer "lexer_colorful.c")
+add_dependencies(nami_lexer_pretty_printer nami log json array dict sync)
+target_include_directories(nami_lexer_pretty_printer PUBLIC ${NAMI_INCLUDE_DIR} ${QUEUE_INCLUDE_DIR} ${ARRAY_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR} ${HASH_CACHE_INCLUDE_DIR})
+target_link_libraries(nami_lexer_pretty_printer nami queue log json array dict sync)
 
 # Add source to this project's tester executable.
 add_executable (nami_tester "nami_test.c")
@@ -128,7 +140,7 @@ target_include_directories(nami_tester PUBLIC ${NAMI_INCLUDE_DIR} ${QUEUE_INCLUD
 target_link_libraries(nami_tester nami queue log json array dict sync)
 
 # Add source to this project's library
-add_library (nami SHARED "nami.c" "statement.c" "assignment.c" "expression.c" "parse.c" "environment.c" "node.c")
+add_library (nami SHARED "nami.c" "statement.c" "lexer.c" "assignment.c" "expression.c" "parse.c" "environment.c" "node.c")
 add_dependencies(nami log json array dict sync)
 target_include_directories(nami PUBLIC ${NAMI_INCLUDE_DIR} ${QUEUE_INCLUDE_DIR} ${ARRAY_INCLUDE_DIR} ${DICT_INCLUDE_DIR} ${SYNC_INCLUDE_DIR} ${LOG_INCLUDE_DIR} ${HASH_CACHE_INCLUDE_DIR})
 target_link_libraries(nami PRIVATE queue log json array dict sync)
