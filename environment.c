@@ -60,7 +60,7 @@ int nami_environment_get ( nami_environment *p_nami_environment, const char *con
     // 
 
     // Initialized data
-    void *p_result = dict_get(p_nami_environment->p_dict, p_key);
+    const void *p_result = dict_get(p_nami_environment->p_dict, p_key);
 
     // Error check
     if ( p_result == (void *) 0 ) return 0;

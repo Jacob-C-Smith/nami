@@ -15,7 +15,7 @@
 // nami 
 #include <nami/typedef.h>
 #include <nami/nami.h>
-#include <nami/node.h>
+#include <nami/parse.h>
 #include <nami/assignment.h>
 
 // Structure definitions
@@ -34,3 +34,6 @@ struct nami_statement_s
  * @return 1 on success, 0 on error
 */
 int nami_evaluate_statement ( nami_node *p_nami_node, nami_environment *p_environment );
+
+// Parsers
+int nami_parse_statement ( nami_node **pp_node, char *p_text, char **pp_return_pointer );

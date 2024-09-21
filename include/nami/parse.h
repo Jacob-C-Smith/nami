@@ -25,4 +25,4 @@
  * 
  * @return 1 on success, 0 on error
  */
-int nami_parse_whitespace ( char *pointer, char **return_pointer );
+//int nami_parse_whitespace ( char *pointer, char **return_pointer );

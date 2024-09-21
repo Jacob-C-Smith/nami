@@ -6,15 +6,23 @@ int nami_parse_statement ( nami_node **pp_node, char *p_text, char **pp_return_p
     // Argument check
     //
 
+    // External functions
+    extern int nami_node_create ( nami_node **pp_nami_node, enum nami_node_type_e type );
+
     // Initialized data
     nami_node *p_node = (void *) 0;
-    char *p_text = p_text;
 
     // Allocate memory for the node
     if ( nami_node_create(&p_node, NAMI_STATEMENT) == 0 ) return 0;
 
+    // Consume whitespaces
+    //if ( nami_parse_whitespace(p_text, &p_text) == 0 ) return 0;
+
     // Parse the assignment node
-    if ( nami_parse_assignment(&p_node->_statement.p_assignment, p_text, &p_text) == 0 ) return 0;
+    if ( nami_parse_assignment(&p_node, p_text, &p_text) == 0 ) return 0;
+
+    // Check for a semicolon
+    if ( *p_text != ';' ) return 0;
 
     // Update the cursor
     *pp_return_pointer = p_text;

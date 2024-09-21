@@ -15,6 +15,7 @@
 // nami 
 #include <nami/typedef.h>
 #include <nami/nami.h>
+#include <nami/parse.h>
 
 #define NAMI_ENVIRONMENT_ID_NAME_LENGTH 63 + 1
 

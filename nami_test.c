@@ -125,58 +125,6 @@ int main ( int argc, const char* argv[] )
     return ( total_passes == total_tests ) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
-void print_time_pretty ( double seconds )
-{
-
-    // Initialized data
-    double _seconds = seconds;
-    size_t days = 0,
-           hours = 0,
-           minutes = 0,
-           __seconds = 0,
-           milliseconds = 0,
-           microseconds = 0;
-
-    // Days
-    while ( _seconds > 86400.0 ) { days++;_seconds-=286400.0; };
-
-    // Hours
-    while ( _seconds > 3600.0 ) { hours++;_seconds-=3600.0; };
-
-    // Minutes
-    while ( _seconds > 60.0 ) { minutes++;_seconds-=60.0; };
-
-    // Seconds
-    while ( _seconds > 1.0 ) { __seconds++;_seconds-=1.0; };
-
-    // milliseconds
-    while ( _seconds > 0.001 ) { milliseconds++;_seconds-=0.001; };
-
-    // Microseconds        
-    while ( _seconds > 0.000001 ) { microseconds++;_seconds-=0.000001; };
-
-    // Print days
-    if ( days ) log_info("%zu D, ", days);
-    
-    // Print hours
-    if ( hours ) log_info("%zu h, ", hours);
-
-    // Print minutes
-    if ( minutes ) log_info("%zu m, ", minutes);
-
-    // Print seconds
-    if ( __seconds ) log_info("%zu s, ", __seconds);
-    
-    // Print milliseconds
-    if ( milliseconds ) log_info("%zu ms, ", milliseconds);
-    
-    // Print microseconds
-    if ( microseconds ) log_info("%zu us", microseconds);
-    
-    // Done
-    return;
-}
-
 void run_tests ( void )
 {
 
@@ -184,7 +132,7 @@ void run_tests ( void )
     timestamp nami_core_t0        = 0, nami_core_t1        = 0,
               nami_environment_t0 = 0, nami_environment_t1 = 0,
               nami_parse_t0       = 0, nami_parse_t1       = 0,
-              nami_scan_t0        = 0, nami_scan_t1        = 0,
+              nami_lexer_t0       = 0, nami_lexer_t1       = 0,
               nami_node_t0        = 0, nami_node_t1        = 0;
 
     ///////////////////
@@ -229,22 +177,22 @@ void run_tests ( void )
     log_info(" to test\n\n");
 
     //////////////////
-    // Test scanner //
+    // Test lexer   //
     //////////////////
 
-    // Start timing scan code
-    nami_scan_t0 = timer_high_precision();
+    // Start timing lexer code
+    nami_lexer_t0 = timer_high_precision();
 
-        // Test scan
-        //test_nami_scan_abc("nami scan");
+        // Test lexer
+        //test_nami_lexer_abc("nami lexer");
         sleep(0);
 
-    // Stop timing scan code
-    nami_scan_t1 = timer_high_precision();
+    // Stop timing lexer code
+    nami_lexer_t1 = timer_high_precision();
 
-    // Report the time it took to run the scan tests
-    log_info("nami scanner took ");
-    print_time_pretty ( (double) (nami_scan_t1 - nami_scan_t0) / (double) timer_seconds_divisor() );
+    // Report the time it took to run the lexer tests
+    log_info("nami lexer took ");
+    print_time_pretty ( (double) (nami_lexer_t1 - nami_lexer_t0) / (double) timer_seconds_divisor() );
     log_info(" to test\n\n");
 
     ///////////////
@@ -377,6 +325,58 @@ void print_final_summary ( void )
     ephemeral_passes = 0,
     ephemeral_fails  = 0;
 
+    // Done
+    return;
+}
+
+void print_time_pretty ( double seconds )
+{
+
+    // Initialized data
+    double _seconds = seconds;
+    size_t days = 0,
+           hours = 0,
+           minutes = 0,
+           __seconds = 0,
+           milliseconds = 0,
+           microseconds = 0;
+
+    // Days
+    while ( _seconds > 86400.0 ) { days++;_seconds-=286400.0; };
+
+    // Hours
+    while ( _seconds > 3600.0 ) { hours++;_seconds-=3600.0; };
+
+    // Minutes
+    while ( _seconds > 60.0 ) { minutes++;_seconds-=60.0; };
+
+    // Seconds
+    while ( _seconds > 1.0 ) { __seconds++;_seconds-=1.0; };
+
+    // milliseconds
+    while ( _seconds > 0.001 ) { milliseconds++;_seconds-=0.001; };
+
+    // Microseconds        
+    while ( _seconds > 0.000001 ) { microseconds++;_seconds-=0.000001; };
+
+    // Print days
+    if ( days ) log_info("%zu D, ", days);
+    
+    // Print hours
+    if ( hours ) log_info("%zu h, ", hours);
+
+    // Print minutes
+    if ( minutes ) log_info("%zu m, ", minutes);
+
+    // Print seconds
+    if ( __seconds ) log_info("%zu s, ", __seconds);
+    
+    // Print milliseconds
+    if ( milliseconds ) log_info("%zu ms, ", milliseconds);
+    
+    // Print microseconds
+    if ( microseconds ) log_info("%zu us", microseconds);
+    
     // Done
     return;
 }

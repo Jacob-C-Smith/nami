@@ -29,15 +29,15 @@ struct nami_node_s
     
     union
     {
-        struct nami_statement_s  _statement;
-        struct nami_assignment_s _assignment;
-//      struct nami_identifier_s _identifier;
-        struct nami_expression_s _expression;
-        struct nami_term_s       _term;
-        struct nami_fact_s       _fact;
-//      struct nami_number_s     _number;
-//      struct nami_add_s        _add;
-//      struct nami_mul_s        _mul;
+        nami_statement  _statement;
+        nami_assignment _assignment;
+//      nami_identifier _identifier;
+        nami_expression _expression;
+        nami_term       _term;
+        nami_fact       _fact;
+//      nami_number     _number;
+//      nami_add        _add;
+//      nami_mul        _mul;
     };
 };
 
@@ -59,12 +59,12 @@ const char *_node_type_names [ ] =
 const fn_nami_evaluate *_pfn_node_evaluators [ ] =
 {
     [NAMI_INVALID]            = (fn_nami_evaluate *) 0,
-    [NAMI_STATEMENT]          = (fn_nami_evaluate *) nami_evaluate_statement,
-    [NAMI_ASSIGNMENT]         = (fn_nami_evaluate *) nami_evaluate_assignment,
+    [NAMI_STATEMENT]          = (fn_nami_evaluate *) 0,
+    [NAMI_ASSIGNMENT]         = (fn_nami_evaluate *) 0,
     [NAMI_IDENTIFIER]         = (fn_nami_evaluate *) 0,
-    [NAMI_EXPRESSION]         = (fn_nami_evaluate *) nami_evaluate_expression,
-    [NAMI_TERM]               = (fn_nami_evaluate *) nami_evaluate_term,
-    [NAMI_FACT]               = (fn_nami_evaluate *) nami_evaluate_fact,
+    [NAMI_EXPRESSION]         = (fn_nami_evaluate *) 0,
+    [NAMI_TERM]               = (fn_nami_evaluate *) 0,
+    [NAMI_FACT]               = (fn_nami_evaluate *) 0,
     [NAMI_NUMBER]             = (fn_nami_evaluate *) 0,
     [NAMI_ADD_OPERATION]      = (fn_nami_evaluate *) 0,
     [NAMI_MULTIPLY_OPERATION] = (fn_nami_evaluate *) 0
@@ -73,12 +73,12 @@ const fn_nami_evaluate *_pfn_node_evaluators [ ] =
 const fn_nami_parse *_pfn_node_parsers [ ] =
 {
     [NAMI_INVALID]            = (fn_nami_parse *) 0,
-    [NAMI_STATEMENT]          = (fn_nami_parse *) nami_parse_statement,
-    [NAMI_ASSIGNMENT]         = (fn_nami_parse *) nami_evaluate_assignment,
+    [NAMI_STATEMENT]          = (fn_nami_parse *) 0,
+    [NAMI_ASSIGNMENT]         = (fn_nami_parse *) 0,
     [NAMI_IDENTIFIER]         = (fn_nami_parse *) 0,
-    [NAMI_EXPRESSION]         = (fn_nami_parse *) nami_evaluate_expression,
-    [NAMI_TERM]               = (fn_nami_parse *) nami_evaluate_term,
-    [NAMI_FACT]               = (fn_nami_parse *) nami_evaluate_fact,
+    [NAMI_EXPRESSION]         = (fn_nami_parse *) 0,
+    [NAMI_TERM]               = (fn_nami_parse *) 0,
+    [NAMI_FACT]               = (fn_nami_parse *) 0,
     [NAMI_NUMBER]             = (fn_nami_parse *) 0,
     [NAMI_ADD_OPERATION]      = (fn_nami_parse *) 0,
     [NAMI_MULTIPLY_OPERATION] = (fn_nami_parse *) 0
