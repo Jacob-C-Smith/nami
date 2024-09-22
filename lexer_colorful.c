@@ -33,13 +33,14 @@ int main ( int argc, const char *argv[] )
         // Error check
         if ( p_value->type != JSON_VALUE_OBJECT ) continue;
         
-        if      ( dict_get(p_value->object, "comment"        ) ) printf("\033[92m");
-        else if ( dict_get(p_value->object, "identifier"     ) ) printf("\033[93m");
-        else if ( dict_get(p_value->object, "separator"      ) ) printf("\033[94m");
+        if      ( dict_get(p_value->object, "identifier"     ) ) printf("\033[93m");
         else if ( dict_get(p_value->object, "keyword"        ) ) printf("\033[95m");
+        else if ( dict_get(p_value->object, "separator"      ) ) printf("\033[94m");
+        else if ( dict_get(p_value->object, "operator"       ) ) printf("\033[94m");
         else if ( dict_get(p_value->object, "string literal" ) ) printf("\033[91m");
         else if ( dict_get(p_value->object, "number literal" ) ) printf("\033[90m");
         else if ( dict_get(p_value->object, "integer literal") ) printf("\033[90m");
+        else if ( dict_get(p_value->object, "comment"        ) ) printf("\033[92m");
             
         
         // Print the token
@@ -54,7 +55,7 @@ int main ( int argc, const char *argv[] )
 
     // EOF?
     if ( feof(stdin) )
-        fprintf(stderr, "\r\033[44m\033[[[[[EOF]]] <<< %s\033[0m\n", argv[0]);
+        fprintf(stderr, "\r\033[44m\033[[[[[EOF]]] >>> %s\033[0m\n", argv[0]);
     
     // Newline
     else 

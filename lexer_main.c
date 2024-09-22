@@ -21,7 +21,7 @@ int main ( int argc, const char *argv[] )
     
     // Initialized data
     char  _in[1024] = { 0 };
-    char *p_in      = &_in;
+    char *p_in = &_in;
     int r = 1;
 
     // Read text; write tokens
@@ -45,6 +45,42 @@ int main ( int argc, const char *argv[] )
                     printf("{\"string literal\":\"%s\"}\n", p_value->string);
 
                 json_value_free(p_value);
+            }
+            else if ( isdigit(p_in[0]) )
+            {
+                json_value *p_value = 0;
+                r = json_value_parse(p_in, &p_in, &p_value);
+                if ( p_value->type == JSON_VALUE_NUMBER )
+                    printf("{\"number literal\":%g}\n", p_value->number);
+                else if ( p_value->type == JSON_VALUE_INTEGER )
+                    printf("{\"integer literal\":%d}\n", p_value->integer);
+
+                json_value_free(p_value);
+
+            }
+            else if ( ispunct(p_in[0]) )
+            {
+                if ( nami_lexer_operator((char *)1, p_in, &p_in) == 0 )
+                {
+                    printf("{\"separator\":\"[TODO]\"}\n");
+                    while (*p_in != ' ')
+                    {
+                        p_in++;
+                    }
+                    p_in++;
+                }
+            }
+            else if ( isalpha(p_in[0]) )
+            {
+                if ( nami_lexer_keyword((char *)1, p_in, &p_in) == 0 )
+                {
+                    printf("{\"identifier\":\"[TODO]\"}\n");
+                    while (*p_in != ' ')
+                    {
+                        p_in++;
+                    }
+                    p_in++;
+                }
             }
             else if ( p_in[0] == '{' )
             {
@@ -72,28 +108,14 @@ int main ( int argc, const char *argv[] )
             
                 json_value_free(p_value);
             }
-            else if ( isdigit(p_in[0]) )
-            {
-                json_value *p_value = 0;
-                r = json_value_parse(p_in, &p_in, &p_value);
-                if ( p_value->type == JSON_VALUE_NUMBER )
-                    printf("{\"number literal\":%g}\n", p_value->number);
-                else if ( p_value->type == JSON_VALUE_INTEGER )
-                    printf("{\"integer literal\":%d}\n", p_value->integer);
-
-                json_value_free(p_value);
-
-            }
-            else if ( ispunct(p_in[0]) )
-                r = nami_lexer_operator((char *)1, p_in, &p_in); 
-            else if ( isalpha(p_in[0]) )
-                r = nami_lexer_keyword((char *)1, p_in, &p_in); 
         };
+
+        fflush(stdout);
     }
 
     // EOF?
     if ( feof(stdin) )
-        fprintf(stderr, "\r\033[44m\033[[[[[EOF]]] <<< %s\033[0m\n", argv[0]);
+        fprintf(stderr, "\r\033[44m\033[[[[[EOF]]] >>> %s\033[0m\n", argv[0]);
     
     // Newline
     else 

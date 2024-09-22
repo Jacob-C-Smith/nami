@@ -349,8 +349,8 @@ int nami_lexer_keyword ( char *p_result, char *pointer, char **return_pointer )
     // Index the keyword
     p_keyword_value = _p_keywords[hash % ( sizeof(_p_keywords) / sizeof(const char *))];
     
-    if ( p_keyword_value ==     (void *) 0 ) goto unrecognized_keyword;
-    if ( strcmp(p_keyword_value, _keyword) ) goto unrecognized_keyword;
+    if ( p_keyword_value ==     (void *) 0 ) return 0;
+    if ( strcmp(p_keyword_value, _keyword) ) return 0;
 
     printf("{\"keyword\":\"%s\"}\n", p_keyword_value);
 
@@ -427,8 +427,8 @@ int nami_lexer_operator ( char *p_result, char *pointer, char **return_pointer )
     // Index the keyword
     p_operator_value = _p_operators[hash % ( sizeof(_p_operators) / sizeof(const char *))];
     
-    if ( p_operator_value ==     (void *) 0 ) goto unrecognized_keyword;
-    if ( strcmp(p_operator_value, _keyword) ) goto unrecognized_keyword;
+    if ( p_operator_value ==     (void *) 0 ) return 0;
+    if ( strcmp(p_operator_value, _keyword) ) return 0;
 
     printf("{\"operator\":\"%s\"}\n", p_operator_value);
 
