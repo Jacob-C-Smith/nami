@@ -1,68 +1,16 @@
-/** !
- * Nami collection
- *
- * @file nami/collection.nami
- *
- * @author Jacob Smith
- */
-
 interface Collection : Comparable, Iterator
 {
-
-    // Inherited functions
-    //  - wait ( )
-    //  - notify ( )
-    //  - notify_all ( )
-    //  - compare ( a, b, p_result : int *)
-    //  - foreach ( element, action : func )
-
-    // Function declarations
-    /** !
-     * Add an element to a collection
-     * 
-     * @param element the element
-     */
     add ( element )
-
-    /** !
-     * Remove all elements from a collection
-     */
     clear ( )
-
-    /** !
-     * Test if a collection contains an element
-     * 
-     * @param element  the element
-     * @param p_result pointer to result
-     */
     contains ( element, p_result : bool * )
-
-    /** !
-     * Test if a collection is empty
-     * 
-     * @param p_result pointer to result
-     */
     empty ( p_result : bool * )
-
-    /** !
-     * Remove an element from a collection
-     * 
-     * @param element the element
-     */
     remove ( element )
-
-    /** !
-     * Get the size of a collection
-     * 
-     * @param p_result pointer to result
-     */
     size ( p_result : int * )
 }
 
 type collection : Collection
 {
 
-    // Data
     struct
     {
         c : array = [ ]
@@ -70,91 +18,46 @@ type collection : Collection
         s : int
     }
 
-    // Constructor
     collection ( p_collection : collection *, size : int )
     {
-
-        // Store the max size
         m = size
-
-        // Store the initial size
         s = 0
-
-        // Construct the array
         c = [ ]
-
-        // Done
     }
 
-    // Accessors
     size ( p_result : int * )
     {
-
-        // Store the result
         *p_result = s
-
-        // Done
     }
-
-    int size ( )
-    {
-        return size;
-    }
-
 
     empty ( p_result : bool * )
     {
-
-        // Store the result
         *p_result = (s == 0)
-
-        // Done
     }
 
     contains ( element, p_result : bool * )
     {
 
-        // Initialized data
         result : bool = false
 
-        // Search the collection
         for ( i : int = 0; i < s; i++ )
         {
 
-            // Initialized data
             e : int 
-
-            // Compare c[i] to element 
             compare(c[i], element, &e)
-
-            // If this element is the element ...
             if ( e == 0 ) 
             {
-
-                // ... set the result flag ...
                 result = true
-
-                // ... and stop searching ...
                 break
             }
         }
 
-        // Store the result
         *p_result = result
-
-        // Done
     }
 
-    // Mutators
     add ( element )
     {
-
-        // Add the element to the rear of the collection
         c[s] = element
-
-        // Increment the size of the collection
         s++
-
-        // Done
     }
 }
