@@ -44,18 +44,6 @@ int main ( int argc, const char *argv[] )
 
         p_in[strlen(p_in) - 1] = '\0';
 
-        while ( nami_lexer_keyword((char *)1, p_in, &p_in) == 1 );
-
-
-        // Read
-        //nami_parse_statement(&p_nami_node, &p_in, 0);
-
-        // Eval
-        //p_nami_node->pfn_evaluate(p_nami_node, p_environment);
-
-        // Write
-        //
-
         // Print the prompt
         fprintf(stderr, "\r%s ", p_prompt_text);
     }
