@@ -16,111 +16,92 @@
 #include <nami/statement.h>
 #include <nami/lexer.h>
 
+/**!
+ * Return the size of a file IF buffer == 0 ELSE read a file into buffer
+ * 
+ * @param path path to the file
+ * @param buffer buffer
+ * @param binary_mode "wb" IF true ELSE "w"
+ * 
+ * @return 1 on success, 0 on error
+ */
+size_t load_file ( const char *path, void *buffer, bool binary_mode );
+
 int main ( int argc, const char *argv[] )
 {
     
     // Initialized data
-    char  _in[1024] = { 0 };
+    nami_lexer *p_lexer = (void *) 0;
+    char  _in[4096] = { 0 };
     char *p_in = &_in;
     int r = 1;
 
-    // Read text; write tokens
-    while( fgets(p_in, 1024, stdin) )
-    {
+    nami_lexer_construct(&p_lexer, "resources/lexer/example/main.nami");
 
-        // Initialized data
-        nami_node *p_nami_node = (void *) 0;
+    while(nami_lexer_next(p_lexer));
 
-        // Store a null terminator on the input buffer
-        p_in[strlen(p_in) - 1] = '\0';
-
-        // Parse the line as a sequence of keywords
-        while ( *p_in != '\0' )
-        {
-            if ( p_in[0] == '\"' )
-            {
-                json_value *p_value = 0;
-                r = json_value_parse(p_in, &p_in, &p_value);
-                if ( p_value->type == JSON_VALUE_STRING )
-                    printf("{\"string literal\":\"%s\"}\n", p_value->string);
-
-                json_value_free(p_value);
-            }
-            else if ( isdigit(p_in[0]) )
-            {
-                json_value *p_value = 0;
-                r = json_value_parse(p_in, &p_in, &p_value);
-                if ( p_value->type == JSON_VALUE_NUMBER )
-                    printf("{\"number literal\":%g}\n", p_value->number);
-                else if ( p_value->type == JSON_VALUE_INTEGER )
-                    printf("{\"integer literal\":%d}\n", p_value->integer);
-
-                json_value_free(p_value);
-
-            }
-            else if ( ispunct(p_in[0]) )
-            {
-                if ( nami_lexer_operator((char *)1, p_in, &p_in) == 0 )
-                {
-                    printf("{\"separator\":\"[TODO]\"}\n");
-                    while (*p_in != ' ')
-                    {
-                        p_in++;
-                    }
-                    p_in++;
-                }
-            }
-            else if ( isalpha(p_in[0]) )
-            {
-                if ( nami_lexer_keyword((char *)1, p_in, &p_in) == 0 )
-                {
-                    printf("{\"identifier\":\"[TODO]\"}\n");
-                    while (*p_in != ' ')
-                    {
-                        p_in++;
-                    }
-                    p_in++;
-                }
-            }
-            else if ( p_in[0] == '{' )
-            {
-                json_value *p_value = 0;
-                r = json_value_parse(p_in, &p_in, &p_value);
-                if ( p_value->type == JSON_VALUE_OBJECT )
-                {
-                    printf("{\"object literal\":");
-                    json_value_print(p_value);
-                    printf("}\n");
-                }
-            
-                json_value_free(p_value);
-            }
-            else if ( p_in[0] == '[' )
-            {
-                json_value *p_value = 0;
-                r = json_value_parse(p_in, &p_in, &p_value);
-                if ( p_value->type == JSON_VALUE_ARRAY )
-                {
-                    printf("{\"array literal\":");
-                    json_value_print(p_value);
-                    printf("}\n");
-                }
-            
-                json_value_free(p_value);
-            }
-        };
-
-        fflush(stdout);
-    }
-
-    // EOF?
-    if ( feof(stdin) )
+    // // EOF?
+    //if ( feof(stdin) )
         fprintf(stderr, "\r\033[44m\033[[[[[EOF]]] >>> %s\033[0m\n", argv[0]);
-    
-    // Newline
-    else 
-        putchar('\n');
+    // // Newline
+    // else 
+    //     putchar('\n');
 
     // Success
     return EXIT_SUCCESS;
+}
+
+size_t load_file ( const char *path, void *buffer, bool binary_mode )
+{
+
+    // Argument checking 
+    if ( path == 0 ) goto no_path;
+
+    // Initialized data
+    size_t  ret = 0;
+    FILE   *f   = fopen(path, (binary_mode) ? "rb" : "r");
+    
+    // Check if file is valid
+    if ( f == NULL ) goto invalid_file;
+
+    // Find file size and prep for read
+    fseek(f, 0, SEEK_END);
+    ret = (size_t) ftell(f);
+    fseek(f, 0, SEEK_SET);
+    
+    // Read to data
+    if ( buffer ) 
+        ret = fread(buffer, 1, ret, f);
+
+    // The file is no longer needed
+    fclose(f);
+    
+    // Success
+    return ret;
+
+    // Error handling
+    {
+
+        // Argument errors
+        {
+            no_path:
+                #ifndef NDEBUG
+                    log_error("[json] Null path provided to function \"%s\n", __FUNCTION__);
+                #endif
+
+            // Error
+            return 0;
+        }
+
+        // File errors
+        {
+            invalid_file:
+                #ifndef NDEBUG
+                    printf("[Standard library] Failed to load file \"%s\". %s\n",path, strerror(errno));
+                #endif
+
+            // Error
+            return 0;
+        }
+    }
 }

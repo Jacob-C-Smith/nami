@@ -37,7 +37,8 @@ enum nami_token_type_e
 // Structure definitions
 struct nami_lexer_s
 {
-    int i;
+    FILE   *p_file;
+    size_t  offset;
 };
 
 struct nami_token_s
@@ -64,6 +65,19 @@ struct nami_token_s
         } keyword;
     };
 };
+
+// Constructors
+/** !
+ * Construct a lexer 
+ * 
+ * @param pp_lexer result
+ * @param p_text   pointer to text
+ * 
+ * @return 1 on success, 0 on error
+ */
+int nami_lexer_construct ( nami_lexer **pp_lexer, char *p_text );
+
+int nami_lexer_next ( nami_lexer *p_lexer );
 
 /** !
  * Scan whitespaces in nami text 

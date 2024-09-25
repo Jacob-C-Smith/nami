@@ -124,7 +124,7 @@ const char *p[] =
     "|="
 };
 
-int nami_lexer_construct ( nami_lexer **pp_lexer )
+int nami_lexer_construct ( nami_lexer **pp_lexer, char *p_path )
 {
     
     // Argument check
@@ -138,6 +138,9 @@ int nami_lexer_construct ( nami_lexer **pp_lexer )
 
     // Initialize data
     memset(p_lexer, 0, sizeof(nami_lexer)); 
+
+    // Store the text pointer
+    p_lexer->p_file = stdin;
 
     // Return a pointer to the caller
     *pp_lexer = p_lexer;
@@ -172,307 +175,99 @@ int nami_lexer_construct ( nami_lexer **pp_lexer )
     }
 }
 
-int nami_lexer_whitespace ( char *pointer, char **return_pointer )
+int nami_lexer_next ( nami_lexer *p_lexer )
 {
 
-    // Argument check
-    if (  pointer == (void *) 0 ) goto no_pointer;
-    if ( *pointer ==       '\0' ) goto done;
+    char c = fgetc(p_lexer->p_file);
+    char buf[256] = { 0 };
 
-    // Skip past spaces, line feed, carriage return, horizontal tab
-    while (
-        *pointer == ' '  ||
-        *pointer == '\n' ||
-        *pointer == '\r' ||
-        *pointer == '\t' ||
-        *pointer == '\0' 
-    )
-    { pointer++; };
-
-    // Error checking
-    if ( *pointer == '\0' ) return 0;
+    while (isblank(c) || c == '\n')
+        c = fgetc(p_lexer->p_file);
     
-    done:
-
-    // Update the pointer
-    *return_pointer = pointer;
-
-    // Success
-    return 1;
-
-    // Error handling
+    if ( ungetc(c, p_lexer->p_file) == -1 ) return 0;
+    
+    if ( isalpha(c) )
     {
+        hash64 h = 0;
+        fscanf(p_lexer->p_file, " %[A-Za-z0-9_]", &buf);
+        h = hash_crc64(buf, strlen(buf));
+        h %= (sizeof(_p_keywords) / sizeof(char *));
 
-        // Argument errors
+        if ( _p_keywords[h] )
         {
-            no_pointer:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-
+            if ( strcmp(_p_keywords[h], buf) == 0 )
+                printf("{\"keyword\":\"%s\"}\n", buf);
+            else
+                printf("{\"identifier\":\"%s\"}\n", buf);
         }
+        else
+                printf("{\"identifier\":\"%s\"}\n", buf);
     }
-}
-
-int nami_lexer_comment ( char *pointer, char **return_pointer )
-{
-    
-    // Argument check
-    if (  pointer == (void *) 0 ) goto no_pointer;
-    if ( *pointer ==       '\0' ) goto done;
-
-    // Check for the correct prefix
-    if ( ! ( pointer[0] == '/' || pointer [1] == '*' ) ) goto malformed_comment;
-
-    // Skip past comments
-    while (
-        *pointer != '\0'        || 
-        ( pointer[0] != '*' &&
-          pointer[1] != '/'    ) 
-    )
-    { pointer++; };
-
-    // Error checking
-    if ( *pointer == '\0' ) return 0;
-    
-    done:
-
-    // Update the pointer
-    *return_pointer = pointer;
-
-    // Success
-    return 1;
-
-    // Error handling
+    else if ( isdigit(c) )
     {
-
-        // Argument errors
+        int i = 0;
+        fscanf(p_lexer->p_file, " %d", &i);
+        printf("{\"integer literal\":\"%d\"}\n", i);
+    }
+    else if ( ispunct(c) )
+    {
+        if (c == '/')
         {
-            no_pointer:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
+            char d = fgetc(p_lexer->p_file);
+            if ( d == '/' )
+            {
+                while (c != '\n')
+                {
+                    c = fgetc(p_lexer->p_file);
+                }
+            }
+            else
+            {
+                ungetc(d, p_lexer->p_file);
+                ungetc(c, p_lexer->p_file);
+            }
         }
-
-        // Scan errors
+        else if (c == '\"')
         {
-            malformed_comment:
+            
+            printf("{\"string literal\":\"");
+            c = fgetc(p_lexer->p_file);
+            
+            do
+            {
+                c = fgetc(p_lexer->p_file);
+                putchar(c);
+            }
+            while (c != '\"');
 
-                #ifndef NDEBUG
-                    log_error("[nami] Failed to parse comment in call to function \"%s\"\n", __FUNCTION__);
-                #endif
+            putchar('}');
+            putchar('\n');
 
-                // Error
-                return 0;
         }
+        else
+        {
+            hash64 h = 0;
+            fscanf(p_lexer->p_file, " %[^A-Za-z0-9\". \n]s", &buf);
+            h = hash_crc64(buf, strlen(buf));
+
+            if ( _p_operators[h % (sizeof(_p_operators) / sizeof(char *))] )
+            {
+                if ( strcmp(_p_operators[h % (sizeof(_p_operators) / sizeof(char *))], buf) == 0 )
+                    printf("{\"operator\":\"%s\"}\n", buf);
+            }
+            if (_p_separators[h % (sizeof(_p_separators) / sizeof(char *))])
+            {
+                if ( strcmp(_p_separators[h % (sizeof(_p_separators) / sizeof(char *))], buf) == 0 )
+                    printf("{\"separator\":\"%s\"}\n", buf);
+            }
+        }
+    } 
+    else
+    {
+        fscanf(p_lexer->p_file, " %s", &buf);
+        printf("{\"???\":\"%s\"}\n", buf);
     }
 
-}
-
-int nami_lexer_identifier ( char *p_result, char *pointer, char **return_pointer )
-{
-
-    // Argument check
-    if (  pointer  == (void *) 0 ) goto no_pointer;
-    if ( *pointer  ==       '\0' ) goto done;
-    if (  p_result == (void *) 0 ) goto no_result;
-
-    // Initialized data
-    char *initial_pointer = pointer;
-
-    // Error checking
-    if ( *pointer == '\0' ) return 0;
-
-    done:
-
-    // Update the pointer
-    *return_pointer = pointer;
-
-    // Success
     return 1;
-
-    // Error handling
-    {
-
-        // Argument errors
-        {
-            no_pointer:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-
-            no_result:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-        }
-    }
 }
 
-int nami_lexer_keyword ( char *p_result, char *pointer, char **return_pointer )
-{
-
-    // Argument check
-    if (  pointer  == (void *) 0 ) goto no_pointer;
-    if ( *pointer  ==       '\0' ) return 0;
-    if (  p_result == (void *) 0 ) goto no_result;
-    if ( *pointer  == '\0' ) return 0;
-
-    // Initialized data
-    char       *initial_pointer = pointer;
-    char        _keyword[256]   = { 0 };
-    size_t      len             = 0;
-    hash64      hash            = 0;
-    const char *p_keyword_value = 0;
-    
-    // Scan the keyword 
-    if ( sscanf(pointer, " %s", _keyword) == 0 ) return 0;
-
-    // Compute the length of the keyword
-    len = strlen(_keyword);
-
-    // Compute the hash of the keyword
-    hash = hash_crc64(_keyword, len);
-
-    // Index the keyword
-    p_keyword_value = _p_keywords[hash % ( sizeof(_p_keywords) / sizeof(const char *))];
-    
-    if ( p_keyword_value ==     (void *) 0 ) return 0;
-    if ( strcmp(p_keyword_value, _keyword) ) return 0;
-
-    printf("{\"keyword\":\"%s\"}\n", p_keyword_value);
-
-    done:
-
-    nami_lexer_whitespace(pointer + strlen(p_keyword_value), &pointer);
-
-    // Update the pointer
-    *return_pointer = pointer;
-
-    // Success
-    return 1;
-
-    // Error handling
-    {
-
-        // Argument errors
-        {
-            no_pointer:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-
-            no_result:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-        }
-
-        // Nami errors
-        {
-            unrecognized_keyword:
-                #ifndef NDEBUG
-                    log_error("[nami] [lexer] Unrecognized keyword \"%s\" in call to function \"%s\"\n", pointer, __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-        }
-    }
-}
-
-int nami_lexer_operator ( char *p_result, char *pointer, char **return_pointer )
-{
-
-    // Argument check
-    if (  pointer  == (void *) 0 ) goto no_pointer;
-    if ( *pointer  ==       '\0' ) return 0;
-    if (  p_result == (void *) 0 ) goto no_result;
-    if ( *pointer  == '\0' ) return 0;
-
-    // Initialized data
-    char       *initial_pointer  = pointer;
-    char        _keyword[256]    = { 0 };
-    size_t      len              = 0;
-    hash64      hash             = 0;
-    const char *p_operator_value = 0;
-    
-    // Scan the keyword 
-    if ( sscanf(pointer, " %s", _keyword) == 0 ) return 0;
-
-    // Compute the length of the keyword
-    len = strlen(_keyword);
-
-    // Compute the hash of the keyword
-    hash = hash_crc64(_keyword, len);
-
-    // Index the keyword
-    p_operator_value = _p_operators[hash % ( sizeof(_p_operators) / sizeof(const char *))];
-    
-    if ( p_operator_value ==     (void *) 0 ) return 0;
-    if ( strcmp(p_operator_value, _keyword) ) return 0;
-
-    printf("{\"operator\":\"%s\"}\n", p_operator_value);
-
-    done:
-
-    nami_lexer_whitespace(pointer + strlen(p_operator_value), &pointer);
-
-    // Update the pointer
-    *return_pointer = pointer;
-
-    // Success
-    return 1;
-
-    // Error handling
-    {
-
-        // Argument errors
-        {
-            no_pointer:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-
-            no_result:
-                #ifndef NDEBUG
-                    log_error("[nami] Null pointer provided for parameter \"pointer\" in call to function \"%s\"\n", __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-        }
-
-        // Nami errors
-        {
-            unrecognized_keyword:
-                #ifndef NDEBUG
-                    log_error("[nami] [lexer] Unrecognized keyword \"%s\" in call to function \"%s\"\n", pointer, __FUNCTION__);
-                #endif
-
-                // Error
-                return 0;
-        }
-    }
-}
